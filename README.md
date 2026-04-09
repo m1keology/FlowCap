@@ -1,8 +1,8 @@
 # FlowCap
 
-**Beautiful screen recorder for Windows** — built with Tauri + React.
+**Open source screen recorder for Windows** — built with Tauri + React.
 
-Record your screen with auto-zoom, spotlight effects, a webcam overlay, and export to MP4, GIF, or WebM. No subscription, no watermark, no cloud upload. Everything stays on your machine.
+Record your screen, add cursor focus effects and webcam overlay, and export to MP4, GIF, or WebM. No subscription, no watermark, no cloud upload. Everything stays on your machine.
 
 ## Features
 
