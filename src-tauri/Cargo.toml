@@ -1,0 +1,19 @@
+[package]
+name        = "flowcap"
+version     = "1.0.0"
+edition     = "2021"
+description = "FlowCap – beautiful screen recorder"
+
+# lib target lets tauri-build generate the glue code
+[lib]
+name       = "flowcap_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+# Core Tauri — tray-icon and image-png are needed for the system-tray icon
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+serde      = { version = "1", features = ["derive"] }
+serde_json = "1"

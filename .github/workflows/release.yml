@@ -1,0 +1,58 @@
+name: Release
+
+# Trigger by pushing a version tag: git tag v1.0.1 && git push origin v1.0.1
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-windows:
+    name: Build Windows installer
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Set up Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust build artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build Tauri app (NSIS + MSI)
+        run: npm run build:tauri
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload installers to GitHub Release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: FlowCap ${{ github.ref_name }}
+          releaseBody: |
+            ## What's new
+            See the [commit history](../../commits/${{ github.ref_name }}) for changes.
+
+            ## Download
+            - **FlowCap_*_x64-setup.exe** — NSIS installer (recommended, installs for current user, no admin needed)
+            - **FlowCap_*_x64_en-US.msi** — MSI installer (for IT/enterprise deployment)
+
+            ### Requirements
+            Windows 10 or later (WebView2 is auto-installed if missing).
+          releaseDraft: true
+          prerelease: false
